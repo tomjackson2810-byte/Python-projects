@@ -1,0 +1,39 @@
+class HashTable:
+    def __init__(self):
+        # collection stores hashed indices -> nested dictionaries of key: value
+        self.collection = {}
+
+    def hash(self, key: str) -> int:
+        """
+        Compute the hash as the sum of Unicode values of all characters in the string.
+        """
+        return sum(ord(char) for char in key)
+
+    def add(self, key: str, value):
+        """
+        Add a key-value pair. Handle collisions by storing them in a nested dictionary.
+        """
+        index = self.hash(key)
+        if index not in self.collection:
+            self.collection[index] = {}
+        self.collection[index][key] = value
+
+    def remove(self, key: str):
+        """
+        Remove a key-value pair if it exists. Do nothing if it doesn't exist.
+        """
+        index = self.hash(key)
+        if index in self.collection and key in self.collection[index]:
+            del self.collection[index][key]
+            # Remove the nested dictionary if it's empty
+            if not self.collection[index]:
+                del self.collection[index]
+
+    def lookup(self, key: str):
+        """
+        Return the value associated with the key, or None if not found.
+        """
+        index = self.hash(key)
+        if index in self.collection:
+            return self.collection[index].get(key)
+        return None
